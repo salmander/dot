@@ -1,0 +1,33 @@
+#!/bin/bash
+
+## Set necessary variables first
+startDir="$PWD"
+haraOpsDir="$PWD/../hara-ops/"
+haraRepoDir=${PWD##*/}
+vagrantDir="${haraOpsDir}cookbooks/sainsburys-hara/.kitchen/kitchen-vagrant/kitchen-sainsburys-hara*"
+
+echo ">>>> PWD:                   '$haraOpsDir' <<<<"
+echo ">>>> HARA Ops dir:          '$haraOpsDir' <<<<"
+echo ">>>> HARA Service repo dir: '$haraRepoDir' <<<<"
+
+
+echo "Doing composer install and database migrations...";
+
+echo "Doing composer install...";
+cd $haraRepoDir;
+composer install;
+
+echo "Running database migrations...";
+
+## In order to do database migrations we need to ssh into the machine and run `phinx migrate` command
+## SSH into HARA-VM and do DB migrations
+
+echo "cd'ing into $vagrantDir";
+cd $vagrantDir;
+
+vagrant ssh -c "cd /hara/$haraRepoDir/; ./vendor/bin/phinx migrate;"
+
+## cd back to the original directory we started
+cd $startDir;
+
+echo "==========~~~It's all done---Finito~~~============";
