@@ -1,33 +1,41 @@
 #!/bin/bash
 
+# This script is intended to run composer and DB migrations on Sainsbury's HARA-repositories.
+#
+# Created by: Salman Ahmed
+# Creation date: 12 July 2016
+
 ## Set necessary variables first
 startDir="$PWD"
 haraOpsDir="$PWD/../hara-ops/"
 haraRepoDir=${PWD##*/}
 vagrantDir="${haraOpsDir}cookbooks/sainsburys-hara/.kitchen/kitchen-vagrant/kitchen-sainsburys-hara*"
 
-echo ">>>> PWD:                   '$haraOpsDir' <<<<"
-echo ">>>> HARA Ops dir:          '$haraOpsDir' <<<<"
-echo ">>>> HARA Service repo dir: '$haraRepoDir' <<<<"
+echo ">>>> PWD: '$haraOpsDir' <<<<";
+echo ">>>> HARA Ops dir: '$haraOpsDir' <<<<";
+echo ">>>> HARA Service repo dir: '$haraRepoDir' <<<<";
+echo '';
 
-
-echo "Doing composer install and database migrations...";
+echo "~~~ Script for 'composer install' and 'database migrations' ~~~";
 
 echo "Doing composer install...";
-cd $haraRepoDir;
 composer install;
-
-echo "Running database migrations...";
+echo '';
 
 ## In order to do database migrations we need to ssh into the machine and run `phinx migrate` command
 ## SSH into HARA-VM and do DB migrations
 
-echo "cd'ing into $vagrantDir";
+echo "Changing dir to '$vagrantDir' so we can SSH into HARA-VM";
 cd $vagrantDir;
 
+
+echo 'Doing DB migrations...';
 vagrant ssh -c "cd /hara/$haraRepoDir/; ./vendor/bin/phinx migrate;"
+echo '';
 
 ## cd back to the original directory we started
 cd $startDir;
 
 echo "==========~~~It's all done---Finito~~~============";
+echo '==========~~~~~~~~Happy coding~~~~~~~~============';
+echo '==========~~~~Script by salmander~~~~~============';
