@@ -11,10 +11,18 @@ haraOpsDir="$PWD/../hara-ops/"
 haraRepoDir=${PWD##*/}
 vagrantDir="${haraOpsDir}cookbooks/sainsburys-hara/.kitchen/kitchen-vagrant/kitchen-sainsburys-hara*"
 
+## We only need to run this script for HARA - BE services
+# Check if $haraRepoDir is a valid hara repo (it starts with `hara` and ends with `service)
+if ! [[ $haraRepoDir =~ ^hara.*service ]] ; then
+	exit;
+else
+	echo "'$haraRepoDir' is a valid hara back-end repo.";
+fi
+
 echo '';
 echo ">>>> PWD: '$startDir' <<<<";
 echo ">>>> HARA Ops dir: '$haraOpsDir' <<<<";
-echo ">>>> HARA Service repo dir: '$haraRepoDir' <<<<";
+echo ">>>> HARA BE service repo dir: '$haraRepoDir' <<<<";
 echo '';
 
 echo "~~~ Script for 'composer install' and 'database migrations' ~~~";
