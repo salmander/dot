@@ -1,6 +1,8 @@
 *** HARA Repo `Post-Merge` hook ***
 
-When you do a `git pull` in one of the HARA repositories (`hara-auth-service`, `hara-productsafety-service` etc.), Git hook will automatically run the script to do a `composer install` (to install any packages required) and database migrate (`phinx migrate`).
+When you do a `git pull` in one of the HARA repositories (`hara-auth-service`, `hara-productsafety-service` etc.), this Git hook will automatically do a `composer install` (to install any dependencies) and database migration (`phinx migrate`).
+
+** Run this on your HOST machine (not inside VM)**
 
 Installation Procedure:
 
@@ -25,42 +27,10 @@ Fast-forward
  composer.lock                                                            | 175 ++++++++++++++++++++++++++++++-
  config/db/migrations/20160705102202_add_status_field_to_user.php         |  36 +++++++
  .../migrations/20160706092130_add_confirmation_token_field_to_user.php   |  35 +++++++
- config/db/migrations/20160706092655_allow_null_password_for_user.php     |  36 +++++++
- .../migrations/20160706105146_remove_index_in_status_field_for_user.php  |  37 +++++++
- ...6105927_add_unique_constraint_to_confirmation_token_field_in_user.php |  36 +++++++
- config/di/prod.php                                                       |  35 ++++++-
- config/di/testing-overrides.php                                          |   7 ++
- config/routing.php                                                       |  22 ++++
- .../Hara/AuthService/Controller/InputValidator/InputValidator.php        | 107 +++++++++++++++++++
- src/Sainsburys/Hara/AuthService/Controller/LookupController.php          | 192 +++++++++++++++++++++++++++++++++-
- src/Sainsburys/Hara/AuthService/Model/User.php                           |  53 ++++++++--
- src/Sainsburys/Hara/AuthService/Service/EmailService.php                 |  70 +++++++++++++
- src/Sainsburys/Hara/AuthService/Service/PasswordService.php              |   7 +-
- src/Sainsburys/Hara/AuthService/Service/UserService.php                  | 143 ++++++++++++++++++++++---
- .../Hara/AuthService/Test/IntegrationTesting/AuthenticationContext.php   |  80 +++++++++++++-
- tests/behat/feature_files/02-hara-94-auth-service.feature                |   1 +
- tests/behat/feature_files/03-hara-32-service-proxy-compatibility.feature |   6 +-
- tests/behat/feature_files/04-get-psm-list.feature                        |  16 +--
- tests/behat/feature_files/05-get-pt-list.feature                         |  16 +--
- tests/behat/feature_files/06-create-new-user.feature                     |  73 +++++++++++++
- tests/behat/feature_files/07-get-supplier-list.feature                   | 120 +++++++++++++++++++++
- tests/behat/feature_files/08-update-user.feature                         | 101 ++++++++++++++++++
- tests/behat/feature_files/09-activate-account.feature                    |  98 +++++++++++++++++
- .../Sainsburys/Hara/AuthService/Controller/LookupControllerSpec.php      |  77 +++++++++++++-
- .../SainsburysHaraSpec/Sainsburys/Hara/AuthService/Model/UserSpec.php    |  27 ++++-
- .../Sainsburys/Hara/AuthService/Service/UserServiceSpec.php              |  75 +++++++++++--
  28 files changed, 1619 insertions(+), 65 deletions(-)
  create mode 100644 config/db/migrations/20160705102202_add_status_field_to_user.php
  create mode 100644 config/db/migrations/20160706092130_add_confirmation_token_field_to_user.php
- create mode 100644 config/db/migrations/20160706092655_allow_null_password_for_user.php
- create mode 100644 config/db/migrations/20160706105146_remove_index_in_status_field_for_user.php
- create mode 100644 config/db/migrations/20160706105927_add_unique_constraint_to_confirmation_token_field_in_user.php
- create mode 100644 src/Sainsburys/Hara/AuthService/Controller/InputValidator/InputValidator.php
- create mode 100644 src/Sainsburys/Hara/AuthService/Service/EmailService.php
- create mode 100644 tests/behat/feature_files/06-create-new-user.feature
- create mode 100644 tests/behat/feature_files/07-get-supplier-list.feature
- create mode 100644 tests/behat/feature_files/08-update-user.feature
- create mode 100644 tests/behat/feature_files/09-activate-account.feature
+
 >>>> PWD: '/Users/salman.ahmed/www/hara/hara-auth-service/../hara-ops/' <<<<
 >>>> HARA Ops dir: '/Users/salman.ahmed/www/hara/hara-auth-service/../hara-ops/' <<<<
 >>>> HARA Service repo dir: 'hara-auth-service' <<<<
@@ -95,15 +65,6 @@ using database hara
 
  == 20160706092130 AddConfirmationTokenFieldToUser: migrating
  == 20160706092130 AddConfirmationTokenFieldToUser: migrated 0.0040s
-
- == 20160706092655 AllowNullPasswordForUser: migrating
- == 20160706092655 AllowNullPasswordForUser: migrated 0.0039s
-
- == 20160706105146 RemoveIndexInStatusFieldForUser: migrating
- == 20160706105146 RemoveIndexInStatusFieldForUser: migrated 0.0067s
-
- == 20160706105927 AddUniqueConstraintToConfirmationTokenFieldInUser: migrating
- == 20160706105927 AddUniqueConstraintToConfirmationTokenFieldInUser: migrated 0.0084s
 
 All Done. Took 0.1883s
 Connection to 127.0.0.1 closed.

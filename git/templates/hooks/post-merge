@@ -11,6 +11,7 @@ haraOpsDir="$PWD/../hara-ops/"
 haraRepoDir=${PWD##*/}
 vagrantDir="${haraOpsDir}cookbooks/sainsburys-hara/.kitchen/kitchen-vagrant/kitchen-sainsburys-hara*"
 
+echo '';
 echo ">>>> PWD: '$startDir' <<<<";
 echo ">>>> HARA Ops dir: '$haraOpsDir' <<<<";
 echo ">>>> HARA Service repo dir: '$haraRepoDir' <<<<";
