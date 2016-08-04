@@ -1,9 +1,11 @@
 # HARA Repo `Post-Merge` hook
 
+
+
 When you do a `git pull` in one of the HARA repositories (`hara-auth-service`, `hara-productsafety-service` etc.), this Git hook will automatically do a `composer install` (to install any dependencies) and database migration (`phinx migrate`).
 
 **For HOST (OSX) use only (not inside VM)**
-
+** git version 2.9.0 or greater is required **
 Installation Procedure:
 
 1. Copy `post-merge` script into your home directory (i.e. `~/.git-hooks/post-merge`)
