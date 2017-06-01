@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# This script is a `pre-commit-msg` hook to prepend branch name to the commit message
+# e.g. If you are on branch `FEATURE-X` and you make a commit with the following message:
+# "Added unit tests"
+# it will become
+# "[FEATURE-X] Added unit tests"
+#
+# Created by: Salman Ahmed
+# Creation date: 01 June 2017
+
+# This way you can customize which branches should be skipped when prepending commit message.
+if [ -z "$branchesToSkip" ]; then
+  branchesToSkip=(master develop test)
+fi
+
+branchName=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+branchName="${branchName##*/}"
+
+# Check if we are in a git repo
+if [ "$?" -ne 0 ]; then
+    echo "Not in a git repository!"
+    exit 2
+fi
+
+# Check if we are during a rebase
+if [ "$branchName" = "HEAD" ]; then
+    # Check if we are in a rebase
+    headNameFile="$(git rev-parse --git-dir)/rebase-merge/head-name"
+    if [ -f "${headNameFile}" ]; then
+        branchName=$(cut -f3- -d/ $headNameFile)
+    else
+        # Ignore DETACHED HEAD state.
+        echo "Ignoring detached state."
+        exit 1
+    fi
+fi
+
+# Continue
+branchExcluded=$(printf "%s\n" "${branchesToSkip[@]}" | grep -c "^$branchName$")
+branchInCommit=$(grep -c "\[$branchName\]" $1)
+
+if [ -n "$branchName" ] && ! [[ $branchExcluded -eq 1 ]] && ! [[ $branchInCommit -ge 1 ]]; then 
+  sed -i.bak -e "1s/^/[$branchName] - /" $1
+fi
